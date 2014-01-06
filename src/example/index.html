@@ -1,0 +1,42 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<title>Tiny Carousel: A lightweight jQuery plugin</title>
+	<link rel="stylesheet" href="css/website.css" type="text/css" media="screen"/>
+
+	<!--[if lte IE 6]>
+		<style type="text/css">
+		/* Internet Explorer 6 PNG transparency fix */
+		#rotatescroll .overlay { background: none; filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src="images/bg-rotatescroll.png", sizingmethod='scale'); }
+		#rotatescroll .thumb { background: none; filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src="images/bg-thumb.png", sizingmethod='scale'); }
+		</style>
+	<![endif]-->
+	
+	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+	<script type="text/javascript" src="js/jquery.tinycircleslider.min.js"></script>
+	<script type="text/javascript">
+		$(document).ready(function(){
+			$('#rotatescroll').tinycircleslider({ interval: true, snaptodots: true });
+		});
+	</script>	
+</head>
+<body>
+	<div id="rotatescroll">
+		<div class="viewport">
+			<ul class="overview">
+				<li><a href="http://www.baijs.nl"><img src="images/hdr3.jpg" /></a></li>
+				<li><a href="http://www.baijs.nl"><img src="images/hdr2.jpg" /></a></li>
+				<li><a href="http://www.baijs.nl"><img src="images/hdr1.jpg" /></a></li>
+				<li><a href="http://www.baijs.nl"><img src="images/hdr4.jpg" /></a></li>
+				<li><a href="http://www.baijs.nl"><img src="images/hdr5.jpg" /></a></li>															
+			</ul>
+		</div>
+		
+		<div class="dot"></div>
+		<div class="overlay"></div>
+		<div class="thumb"></div>
+	</div>
+</body>
+</html>

@@ -1,0 +1,12 @@
+img { border: 0; }
+
+/* Tiny Circleslider */
+#rotatescroll { height:300px; position:relative; width:300px; }
+#rotatescroll .viewport{ height:300px; position: relative; margin:0 auto; overflow:hidden; width:300px }
+#rotatescroll .overview { position: absolute; width: 798px; list-style: none; margin: 0; padding: 0;  left: 0; top: 0; }
+#rotatescroll .overview li { height:300px; width:300px; float: left; position: relative; }
+#rotatescroll .overlay {background:url(../images/bg-rotatescroll.png) no-repeat 0 0;  position: absolute; left: 0; top: 0; height:300px; width:300px; }
+#rotatescroll .thumb { background:url(../images/bg-thumb.png) no-repeat 50% 50%; position: absolute; top: -3px; cursor: pointer; left: 137px; width: 100px; z-index: 200;  height: 100px; }
+#rotatescroll .dot { background:url(../images/bg-dot.png) no-repeat 0 0; display: none; height: 12px; width: 12px; position: absolute; left: 155px; top: 3px; z-index: 100; }
+#rotatescroll .dot span { display: none; }
+
