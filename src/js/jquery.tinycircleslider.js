@@ -343,7 +343,7 @@
             return false;
         }
 
-        function setCSS(angle, bFireCallback)
+        function setCSS(angle, fireCallback)
         {
             if(options.placedots)
             {
@@ -363,9 +363,9 @@
             ,   left :  Math.sin(toRadians(angle)) * options.radius + (containerSize.width / 2 - thumbSize.width / 2)
             });
 
-            if( typeof options.callback === "function" && bFireCallback )
+            if( typeof options.callback === "function" && fireCallback )
             {
-                options.callback.call( root, $slides[iCurrent], iCurrent );
+                options.callback.call($container, $slides[iCurrent], iCurrent );
             }
         }
 
