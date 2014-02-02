@@ -89,6 +89,8 @@
             setEvents();
 
             self.move(0, self.options.interval);
+
+            return self
         }
 
         function setEvents()
@@ -385,7 +387,7 @@
             return false;
         }
 
-        initialize();
+        return initialize();
     }
 
     $.fn[pluginName] = function(options)
