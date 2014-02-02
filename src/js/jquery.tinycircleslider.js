@@ -90,7 +90,7 @@
 
             self.move(0, self.options.interval);
 
-            return self
+            return self;
         }
 
         function setEvents()
