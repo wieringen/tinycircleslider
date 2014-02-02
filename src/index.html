@@ -182,8 +182,8 @@ $(document).ready(function()
                             $(document).ready(function()
                             {
                                 $("#circleslider2").tinycircleslider({
-                                    interval   : true
-                                ,   snaptodots : true
+                                    interval : true
+                                ,   dotsSnap : true
                                 });
                             });
                         </script>
@@ -193,8 +193,8 @@ $(document).ready(function()
 $(document).ready(function()
 {
     $("#circleslider2").tinycircleslider({
-        interval   : true
-    ,   snaptodots : true
+        interval : true
+    ,   dotsSnap : true
     });
 });
                     </code></pre>
@@ -218,10 +218,10 @@ $(document).ready(function()
                             $(document).ready(function()
                             {
                                 $("#circleslider3").tinycircleslider({
-                                    lightbox   : true
-                                ,   snaptodots : true
-                                ,   radius     : 184
-                                ,   hidedots   : false
+                                    lightbox : true
+                                ,   dotsSnap : true
+                                ,   radius   : 184
+                                ,   dotsHide : false
                                 });
 
                                 $("#circleslider3").find("a").fancybox();
@@ -235,10 +235,10 @@ $(document).ready(function()
 $(document).ready(function()
 {
     $("#circleslider3").tinycircleslider({
-        lightbox   : true
-    ,   snaptodots : true
-    ,   radius     : 170
-    ,   hidedots   : false
+        lightbox : true
+    ,   dotsSnap : true
+    ,   radius   : 170
+    ,   dotsHide : false
     });
 
     $("#circleslider3").find("a").fancybox();
@@ -265,9 +265,9 @@ $(document).ready(function()
                             $(document).ready(function()
                             {
                                 $("#circleslider4").tinycircleslider({
-                                    snaptodots : true
+                                    dotsSnap : true
                                 ,   radius     : 215
-                                ,   hidedots   : false
+                                ,   dotsHide   : false
                                 ,   interval   : true
                                 });
                             });
@@ -279,10 +279,10 @@ $(document).ready(function()
 $(document).ready(function()
 {
     $("#circleslider4").tinycircleslider({
-        snaptodots : true
-    ,   radius     : 215
-    ,   hidedots   : false
-    ,   interval   : true
+        dotsSnap : true
+    ,   radius   : 215
+    ,   dotsHide : false
+    ,   interval : true
     });
 });
                     </code></pre>
@@ -303,13 +303,15 @@ $(document).ready(function()
                     <h2>Options</h2>
                     <p>A list of all the available options and there default value</p>
                     <ul class="list">
-                        <li><strong>snaptodots: false</strong> -- shows dots when user starts dragging and snap to them</li>
-                        <li><strong>hidedots: true</strong> -- fadesout the dots when user stops dragging.</li>
-                        <li><strong>interval: false</strong> -- move to another block on intervals.</li>
-                        <li><strong>intervaltime: 3500</strong> -- interval time in milliseconds.</li>
-                        <li><strong>lightbox: false</strong> -- when you have links with a lightbox attached this most be true for normal links to work correctly this must be false.</li>
-                        <li><strong>radius: 140</strong> -- Used to determine the size of the circleslider</li>
-                        <li><strong>callback: null</strong> -- function that executes after every move</li>
+                        <li><strong>interval       : false</strong> -- move to another block on intervals.</li>
+                        <li><strong>intervalTime   : 3500</strong> -- time between intervals.</li>
+                        <li><strong>intervalRandom : true</strong> -- move to a random block or move from block to the next clockwise.</li>
+                        <li><strong>dots           : true</strong> -- automatic placement of dots or use predefined location on slide.</li>
+                        <li><strong>dotsSnap       : false</strong> -- shows dots when user starts dragging and snap to them.</li>
+                        <li><strong>dotsHide       : true</strong> -- fades out the dots when user stops dragging.</li>
+                        <li><strong>radius         : 140</strong> -- Used to determine the size of the circleslider</li>
+                        <li><strong>lightbox       : false</strong> -- when you have links with a lightbox attached this most be true for normal links to work correctly this must be false.</li>
+                        <li><strong>onMove         : null</strong> -- function that executes after every move</li>
                     </ul>
 
                     <p>The image below displays how you calculate the radius of your circleslider. The center of your slider to the center of the outside circle is your radius. </p>
@@ -318,7 +320,7 @@ $(document).ready(function()
                     <p>Below is a example of a callback. After every move the function is executed and it will return 2 things the current li and its index.</p>
                     <pre class="prettyprint"><code>
 $('#rotatescroll').tinycircleslider({
-    callback: function(element, index){
+    onMove: function(element, index){
         console.log(element, index);
     }
 });
@@ -326,11 +328,11 @@ $('#rotatescroll').tinycircleslider({
 
                     <p>Sometimes you want to be able to go to a certain slide programmatically. You can do this with the gotoSlide method.</p>
                     <pre class="prettyprint"><code>
-var rotateslider = $( "#rotatescroll" );
+var rotateslider = $("#rotatescroll");
 
 rotateslider.tinycircleslider();
 
-rotateslider.data( "tcs" ).gotoSlide( 4 );
+rotateslider.data("plugin_tinycircleslider").move(4);
 
                     </code></pre>
 

@@ -15,56 +15,25 @@
     }
 }(function ($)
 {
-    $.tiny = $.tiny || {};
-
-    $.tiny.circleslider = {
+    var pluginName = "tinycircleslider"
+    ,   defaults   =
+        {
             interval       : false // move to another block on intervals.
-        ,   intervaltime   : 3500  // time between intervals.
-        ,   intervalrandom : true  // move to a random block or move from block to the next clockwise.
-        ,   placedots      : true  // automatic placement of dots or use predefined location on slide.
-        ,   snaptodots     : false // shows dots when user starts dragging and snap to them.
-        ,   hidedots       : true  // fades out the dots when user stops dragging.
+        ,   intervalTime   : 3500  // time between intervals.
+        ,   dots           : true  // automatic placement of dots or use predefined location on slide.
+        ,   dotsSnap       : false // shows dots when user starts dragging and snap to them.
+        ,   dotsHide       : true  // fades out the dots when user stops dragging.
         ,   radius         : 140   // Used to determine the size of the circleslider
         ,   lightbox       : false // when you have links with a lightbox attached this most be true for normal links to work correctly this must be false.
-        ,   callback       : null  // function that executes after every move
-    };
+        ,   onMove         : null  // function that executes after every move
+        }
+    ;
 
-    $.fn.tinycircleslider = function( params )
+    function Plugin($container, options)
     {
-        var options = $.extend({}, $.tiny.circleslider, params);
-
-        this.each(function()
-        {
-            $( this ).data( "tcs", new Slider( $( this ), options ) );
-        });
-
-        return $.extend( this, {
-            gotoSlide: function( slideIndex, interval )
-            {
-                return this.each(function ()
-                {
-                    $( this ).data( "tcs" ).gotoSlide( slideIndex, interval );
-                });
-            }
-        ,   stopInterval: function()
-            {
-                return this.each(function ()
-                {
-                    $( this ).data( "tcs" ).stopInterval();
-                });
-            }
-        ,   startInterval: function()
-            {
-                return this.each(function ()
-                {
-                    $( this ).data( "tcs" ).startInterval();
-                });
-            }
-        });
-    };
-
-    function Slider( $container, options )
-    {
+        this.options   = $.extend({}, defaults, options);
+        this._defaults = defaults;
+        this._name     = pluginName;
 
         var self            = this
         ,   $viewport       = $container.find(".viewport")
@@ -105,12 +74,11 @@
 
         ,   angleOld      = 10
         ,   iCounter      = 0
-        ,   iCurrent      = 0
         ;
 
         function initialize()
         {
-            if(options.snaptodots)
+            if(self.options.dotsSnap)
             {
                 setDots();
             }
@@ -121,35 +89,46 @@
 
             setEvents();
 
-            self.gotoSlide(0, options.interval);
+            self.move(0, self.options.interval);
         }
 
         function setEvents()
         {
-            $thumb.mousedown(start);
+            var touchEvents = "ontouchstart" in document.documentElement
+            ,   eventType   = touchEvents ? "touchstart" : "mousedown"
+            ;
 
-            if(options.snaptodots)
+            if(touchEvents)
             {
-                $container.delegate(".dot", "click", function()
+                $container[0].ontouchmove = drag;
+            }
+            else
+            {
+                $thumb.bind(eventType, startDrag);
+            }
+
+            if(self.options.dotsSnap)
+            {
+                $container.delegate(".dot", eventType, function()
                 {
                     clearTimeout(intervalTimer);
 
                     if(0 === animationStep)
                     {
-                        self.gotoSlide($(this).text() - 1);
+                        self.move($(this).text() - 1);
                     }
 
-                    self.startInterval();
+                    self.start();
                 });
             }
         }
 
-        function setTimer( bFirst )
+        function setTimer(slideFirst)
         {
             intervalTimer = setTimeout(function()
             {
-                self.gotoSlide( ($slides[(iCurrent + 1)] !== undefined ? (iCurrent + 1) : 0), true);
-            }, ( bFirst ? 50 : options.intervaltime ) );
+                self.move(($slides[(slideIndexCurrent + 1)] !== undefined ? (slideIndexCurrent + 1) : 0), true);
+            }, (slideFirst ? 50 : self.options.intervalTime));
         }
 
         function toRadians(degrees)
@@ -172,11 +151,11 @@
             $slides.each(function(index, slide)
             {
                 var $dotClone = $dots.clone()
-                ,   angle     = options.placedots ? (index * 360 / $slides.length) : parseInt($(slide).attr("data-degrees"), 10)
+                ,   angle     = self.options.dots ? (index * 360 / $slides.length) : parseInt($(slide).attr("data-degrees"), 10)
                 ,   position  =
                     {
-                        top  : -Math.cos(toRadians(angle)) * options.radius + containerSize.height / 2 - dotSize.height / 2
-                    ,   left :  Math.sin(toRadians(angle)) * options.radius + containerSize.width  / 2 - dotSize.width  / 2
+                        top  : -Math.cos(toRadians(angle)) * self.options.radius + containerSize.height / 2 - dotSize.height / 2
+                    ,   left :  Math.sin(toRadians(angle)) * self.options.radius + containerSize.width  / 2 - dotSize.width  / 2
                     }
                 ;
                 $dotClone.addClass($(slide).attr("data-classname"));
@@ -209,15 +188,15 @@
             $dots = $container.find(".dot");
         }
 
-        this.startInterval = function(first)
+        self.start = function(first)
         {
-            if(options.interval)
+            if(self.options.interval)
             {
                 setTimer( first );
             }
         };
 
-        this.stopInterval = function()
+        self.stop = function()
         {
             clearTimeout(intervalTimer);
         };
@@ -281,7 +260,7 @@
                     ];
         }
 
-        this.gotoSlide = function(slideIndex, interval)
+        self.move = function(slideIndex, interval)
         {
             var angleDestination = dots[slideIndex] && dots[slideIndex].angle || 0
             ,   angleDelta       = findShortestPath(angleDestination, angleOld)[0]
@@ -289,35 +268,35 @@
             ,   angleStep        = (angleDelta / framerate) || 0
             ;
 
-            iCurrent = slideIndex;
+            slideIndexCurrent = slideIndex;
 
             stepMove(angleStep, angleDestination, framerate, interval);
         };
 
-        function sanitizeAngle( angle )
+        function sanitizeAngle(degrees)
         {
-            return angle + ( ( angle > 360 ) ? -360 : ( angle < 0 ) ? 360 : 0 );
+            return (degrees < 0) ? 360 + (degrees % -360) : degrees % 360;
         }
 
-        function stepMove( angleStep, angleDestination, framerate, interval )
+        function stepMove(angleStep, angleDestination, framerate, interval)
         {
             iCounter += 1;
 
-            var angle = sanitizeAngle( Math.round( iCounter * angleStep + angleOld ) );
+            var angle = sanitizeAngle(Math.round(iCounter * angleStep + angleOld));
 
-            if( iCounter === framerate && interval )
+            if(iCounter === framerate && interval)
             {
-                self.startInterval();
+                self.start();
             }
 
-            setCSS( angle, iCounter === framerate );
+            setCSS(angle, iCounter === framerate);
 
-            if( iCounter < framerate )
+            if(iCounter < framerate)
             {
-                animationTimer = setTimeout( function()
+                animationTimer = setTimeout(function()
                 {
                     stepMove(angleStep, angleDestination, framerate, interval);
-                }, 50 );
+                }, 50);
             }
             else
             {
@@ -326,7 +305,7 @@
             }
         }
 
-        function drag( event )
+        function drag(event)
         {
             var containerOffset  = $container.offset()
             ,   thumbPositionNew =
@@ -345,7 +324,7 @@
 
         function setCSS(angle, fireCallback)
         {
-            if(options.placedots)
+            if(self.options.dots)
             {
                 $overview.css("left", -(angle / 360 * slideSize.width * $slides.length));
             }
@@ -359,47 +338,47 @@
             }
 
             $thumb.css({
-                top  : -Math.cos(toRadians(angle)) * options.radius + (containerSize.height / 2 - thumbSize.height / 2)
-            ,   left :  Math.sin(toRadians(angle)) * options.radius + (containerSize.width / 2 - thumbSize.width / 2)
+                top  : -Math.cos(toRadians(angle)) * self.options.radius + (containerSize.height / 2 - thumbSize.height / 2)
+            ,   left :  Math.sin(toRadians(angle)) * self.options.radius + (containerSize.width / 2 - thumbSize.width / 2)
             });
 
-            if( typeof options.callback === "function" && fireCallback )
+            if(typeof self.options.callback === "function" && fireCallback)
             {
-                options.callback.call($container, $slides[iCurrent], iCurrent );
+                self.options.callback.call($container, $slides[slideIndexCurrent], slideIndexCurrent );
             }
         }
 
-        function end(oEvent)
+        function endDrag()
         {
             $(document).unbind("mousemove mouseup");
             $thumb.unbind("mouseup");
 
             clearTimeout(animationTimer);
 
-            if(options.snaptodots)
+            if(self.options.dotsSnap)
             {
-                if(options.hidedots)
+                if(self.options.dotsHide)
                 {
                     $dots.stop(true, true).fadeOut("slow");
                 }
 
-                self.gotoSlide(findClosestSlide(angleOld)[0][0]);
+                self.move(findClosestSlide(angleOld)[0][0]);
             }
 
-            self.startInterval();
+            self.start();
 
             return false;
         }
 
-        function start(oEvent)
+        function startDrag()
         {
             clearTimeout(intervalTimer);
 
             $(document).mousemove(drag);
-            $(document).mouseup(end);
-            $thumb.mouseup(end);
+            $(document).mouseup(endDrag);
+            $thumb.mouseup(endDrag);
 
-            if(options.snaptodots && options.hidedots)
+            if(self.options.dotsSnap && self.options.dotsHide)
             {
                 $dots.stop(true, true).fadeIn("slow");
             }
@@ -409,4 +388,15 @@
 
         initialize();
     }
+
+    $.fn[pluginName] = function(options)
+    {
+        return this.each(function()
+        {
+            if(!$.data(this, "plugin_" + pluginName))
+            {
+                $.data(this, "plugin_" + pluginName, new Plugin($(this), options));
+            }
+        });
+    };
 }));
