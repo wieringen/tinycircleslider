@@ -24,7 +24,6 @@
         ,   dotsSnap       : false // shows dots when user starts dragging and snap to them.
         ,   dotsHide       : true  // fades out the dots when user stops dragging.
         ,   radius         : 140   // Used to determine the size of the circleslider
-        ,   lightbox       : false // when you have links with a lightbox attached this most be true for normal links to work correctly this must be false.
         ,   onMove         : null  // function that executes after every move
         }
     ;
