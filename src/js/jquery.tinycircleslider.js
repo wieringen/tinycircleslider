@@ -73,6 +73,7 @@
 
         ,   angleOld      = 10
         ,   iCounter      = 0
+        ,   touchEvents = "ontouchstart" in document.documentElement
         ;
 
         function initialize()
@@ -95,13 +96,13 @@
 
         function setEvents()
         {
-            var touchEvents = "ontouchstart" in document.documentElement
-            ,   eventType   = touchEvents ? "touchstart" : "mousedown"
-            ;
+            var eventType = touchEvents ? "touchstart" : "mousedown";
 
             if(touchEvents)
             {
-                $container[0].ontouchmove = drag;
+                $container[0].ontouchstart = startDrag;
+                $container[0].ontouchmove  = drag;
+                $container[0].ontouchend   = endDrag;
             }
             else
             {
@@ -110,8 +111,11 @@
 
             if(self.options.dotsSnap)
             {
-                $container.delegate(".dot", eventType, function()
+                $container.delegate(".dot", eventType, function(event)
                 {
+                    event.preventDefault();
+                    event.stopImmediatePropagation();
+
                     clearTimeout(intervalTimer);
 
                     if(0 === animationStep)
@@ -120,6 +124,8 @@
                     }
 
                     self.start();
+
+                    return false;
                 });
             }
         }
@@ -349,12 +355,21 @@
             }
         }
 
-        function endDrag()
+        function endDrag(event)
         {
-            $(document).unbind("mousemove mouseup");
-            $thumb.unbind("mouseup");
+            if($(event.target).hasClass("dot"))
+            {
+                return false;
+            }
+            event.preventDefault();
 
             clearTimeout(animationTimer);
+
+            if(!touchEvents)
+            {
+                $(document).unbind("mousemove mouseup");
+                $thumb.unbind("mouseup");
+            }
 
             if(self.options.dotsSnap)
             {
@@ -367,24 +382,30 @@
             }
 
             self.start();
-
-            return false;
         }
 
-        function startDrag()
+        function startDrag(event)
         {
+            event.preventDefault();
+
+            if($(event.target).hasClass("dot"))
+            {
+                return false;
+            }
+
             clearTimeout(intervalTimer);
 
-            $(document).mousemove(drag);
-            $(document).mouseup(endDrag);
-            $thumb.mouseup(endDrag);
+            if(!touchEvents)
+            {
+                $(document).mousemove(drag);
+                $(document).mouseup(endDrag);
+                $thumb.mouseup(endDrag);
+            }
 
             if(self.options.dotsSnap && self.options.dotsHide)
             {
                 $dots.stop(true, true).fadeIn("slow");
             }
-
-            return false;
         }
 
         return initialize();
