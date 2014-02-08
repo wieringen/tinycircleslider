@@ -298,7 +298,7 @@ $(document).ready(function()
                         </script>
                     </div>
 
-                    <h2>Options</h2>
+                    <h2>Initialize options</h2>
                     <p>A list of all the available options and there default value</p>
                     <ul class="list">
                         <li><strong>interval       : false</strong> -- move to another block on intervals.</li>
@@ -306,33 +306,66 @@ $(document).ready(function()
                         <li><strong>dots           : true</strong> -- automatic placement of dots or use predefined location on slide.</li>
                         <li><strong>dotsSnap       : false</strong> -- shows dots when user starts dragging and snap to them.</li>
                         <li><strong>dotsHide       : true</strong> -- fades out the dots when user stops dragging.</li>
-                        <li><strong>radius         : 140</strong> -- Used to determine the size of the circleslider</li>
                         <li><strong>lightbox       : false</strong> -- when you have links with a lightbox attached this most be true for normal links to work correctly this must be false.</li>
-                        <li><strong>onMove         : null</strong> -- function that executes after every move</li>
+                        <li><strong>radius         : 140</strong> -- Used to determine the size of the circleslider</li>
                     </ul>
 
-                    <p>The image below displays how you calculate the radius of your circleslider. The center of your slider to the center of the outside circle is your radius. </p>
+                    <p>The image below displays how you calculate the radius of your circleslider. The center of your slider to the center of the outside circle is your radius.</p>
                     <img src="images/bg-circleslider-ex.png" />
 
-                    <p>Below is a example of a callback. After every move the function is executed and it will return 2 things the current li and its index.</p>
+                    <h2>Properties</h2>
                     <pre class="prettyprint"><code>
-$('#rotatescroll').tinycircleslider({
-    onMove: function(element, index){
-        console.log(element, index);
-    }
+$(document).ready(function()
+{
+    // You can access the methods and properties of your
+    // slider instance straight after initialization.
+    //
+    $('#box').tinycircleslider();
+
+    // This part you can do from whatever place in your
+    // code as long as the slider allready is initialized.
+    //
+    var box = $('#box').data("tinycircleslider);
+
+    // Now you have access to all the methods and properties.
+    //
+    // box.update();
+    // console.log(box.slideCurrent);
+    //
+    // etc..
 });
                     </code></pre>
 
-                    <p>Sometimes you want to be able to go to a certain slide programmatically. You can do this with the gotoSlide method.</p>
+
+                    <ul class="list">
+                        <li><strong>slideCurrent</strong> -- The index of the current slide.</li>
+                        <li><strong>angleCurrent</strong> -- The current angle of the thumb.</li>
+                    </ul>
+
+                    <h2>Methods</h2>
+                    <ul class="list">
+                        <li><strong>start</strong> -- Start the interval.</li>
+                        <li><strong>stop</strong> -- Stop the interval.</li>
+                        <li><strong>move</strong> -- Move to specific slide. The only param you can supply is the index of the slide.</li>
+                    </ul>
+
+                    <h2>Events</h2>
                     <pre class="prettyprint"><code>
-var rotateslider = $("#rotatescroll");
+$(document).ready(function()
+{
+    var $box = $('#box');
+    var box  = $box.tinycircleslider();
 
-rotateslider.tinycircleslider();
-
-rotateslider.data("plugin_tinycircleslider").move(4);
-
+    $box.bind("move", function()
+    {
+        console.log("do something on every move to a new slide");
+    });
+});
                     </code></pre>
 
+                    <ul class="list">
+                        <li><strong>move</strong> -- The move event will trigger when the carousel slides to a new slide.</li>
+                    </ul>
                 </div>
             </section>
             <!-- CLOSE COLUMN MAIN -->

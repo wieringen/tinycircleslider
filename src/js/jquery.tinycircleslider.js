@@ -65,16 +65,14 @@
             ,   height : $dots.outerHeight()
             }
 
-        ,   intervalTimer     = null
-        ,   animationTimer    = null
-        ,   animationStep     = 0
-        ,   slideIndexCurrent = 0
-        ,   angleCurrent      = 0
-
-        ,   angleOld      = 10
-        ,   iCounter      = 0
-        ,   touchEvents = "ontouchstart" in document.documentElement
+        ,   intervalTimer   = null
+        ,   animationTimer  = null
+        ,   animationStep   = 0
+        ,   touchEvents     = "ontouchstart" in document.documentElement
         ;
+
+        this.slideCurrent = 0;
+        this.angleCurrent = 10;
 
         function initialize()
         {
@@ -134,7 +132,7 @@
         {
             intervalTimer = setTimeout(function()
             {
-                self.move(($slides[(slideIndexCurrent + 1)] !== undefined ? (slideIndexCurrent + 1) : 0), true);
+                self.move(($slides[(self.slideCurrent + 1)] !== undefined ? (self.slideCurrent + 1) : 0), true);
             }, (slideFirst ? 50 : self.options.intervalTime));
         }
 
@@ -195,7 +193,7 @@
             $dots = $container.find(".dot");
         }
 
-        self.start = function(first)
+        this.start = function(first)
         {
             if(self.options.interval)
             {
@@ -203,7 +201,7 @@
             }
         };
 
-        self.stop = function()
+        this.stop = function()
         {
             clearTimeout(intervalTimer);
         };
@@ -267,15 +265,15 @@
                     ];
         }
 
-        self.move = function(slideIndex, interval)
+        this.move = function(slideIndex, interval)
         {
             var angleDestination = dots[slideIndex] && dots[slideIndex].angle || 0
-            ,   angleDelta       = findShortestPath(angleDestination, angleOld)[0]
+            ,   angleDelta       = findShortestPath(angleDestination, self.angleCurrent)[0]
             ,   framerate        = Math.ceil(Math.abs(angleDelta) / 10)
             ,   angleStep        = (angleDelta / framerate) || 0
             ;
 
-            slideIndexCurrent = slideIndex;
+            self.slideCurrent = slideIndex;
 
             stepMove(angleStep, angleDestination, framerate, interval);
         };
@@ -287,18 +285,18 @@
 
         function stepMove(angleStep, angleDestination, framerate, interval)
         {
-            iCounter += 1;
+            animationStep += 1;
 
-            var angle = sanitizeAngle(Math.round(iCounter * angleStep + angleOld));
+            var angle = sanitizeAngle(Math.round(animationStep * angleStep + self.angleCurrent));
 
-            if(iCounter === framerate && interval)
+            if(animationStep === framerate && interval)
             {
                 self.start();
             }
 
-            setCSS(angle, iCounter === framerate);
+            setCSS(angle, animationStep === framerate);
 
-            if(iCounter < framerate)
+            if(animationStep < framerate)
             {
                 animationTimer = setTimeout(function()
                 {
@@ -307,8 +305,8 @@
             }
             else
             {
-                iCounter = 0;
-                angleOld = angleDestination;
+                animationStep = 0;
+                self.angleCurrent = angleDestination;
             }
         }
 
@@ -322,9 +320,9 @@
                 }
             ;
 
-            angleOld = sanitizeAngle(toDegrees(Math.atan2(thumbPositionNew.left, -thumbPositionNew.top)));
+            self.angleCurrent = sanitizeAngle(toDegrees(Math.atan2(thumbPositionNew.left, -thumbPositionNew.top)));
 
-            setCSS(angleOld);
+            setCSS(self.angleCurrent);
 
             return false;
         }
@@ -349,9 +347,9 @@
             ,   left :  Math.sin(toRadians(angle)) * self.options.radius + (containerSize.width / 2 - thumbSize.width / 2)
             });
 
-            if(typeof self.options.callback === "function" && fireCallback)
+            if(fireCallback)
             {
-                self.options.callback.call($container, $slides[slideIndexCurrent], slideIndexCurrent );
+                $container.trigger("move", [$slides[self.slideCurrent], self.slideCurrent]);
             }
         }
 
@@ -378,7 +376,7 @@
                     $dots.stop(true, true).fadeOut("slow");
                 }
 
-                self.move(findClosestSlide(angleOld)[0][0]);
+                self.move(findClosestSlide(self.angleCurrent)[0][0]);
             }
 
             self.start();
