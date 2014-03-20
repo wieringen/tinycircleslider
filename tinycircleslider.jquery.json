@@ -1,7 +1,7 @@
 {
   "name": "tinycircleslider",
   "title": "Tiny Circleslider",
-  "version": "2.0.4",
+  "version": "2.0.5",
   "description": "A lightweight cross browser circular carousel.",
   "homepage": "http://www.baijs.com/tinycircleslider",
   "repository": {
@@ -13,7 +13,7 @@
     "jQuery",
     "Mobile",
     "Carousel",
-    "Slider"
+    "Slider",
     "javascript"
   ],
   "author": {
