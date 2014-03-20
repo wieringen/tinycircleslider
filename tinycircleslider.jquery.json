@@ -27,9 +27,9 @@
     }
   ],
   "bugs": "https://github.com/wieringen/tinycircleslider/issues",
-  "download": "http://baijs.com/tinycircleslider/"
-  "demo" : "http://baijs.com/tinycircleslider/"
-  "docs" : "http://baijs.com/tinycircleslider/"
+  "download": "http://baijs.com/tinycircleslider/",
+  "demo" : "http://baijs.com/tinycircleslider/",
+  "docs" : "http://baijs.com/tinycircleslider/",
   "dependencies": {
     "jquery": ">=1.5"
   }
