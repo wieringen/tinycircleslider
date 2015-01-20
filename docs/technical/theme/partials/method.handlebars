@@ -5,9 +5,9 @@
             (
             {{#params}}
                 {{#if optional}}
-                    <span class="optional">{{name}}{{#if optdefault}}={{optdefault}}{{/if}}</span>
+                    <span class="optional">{{name}}{{#if optdefault}}={{optdefault}}{{/if}},</span>
                 {{else}}
-                    <span>{{name}}</span>
+                    <span>{{name}},</span>
                 {{/if}}
             {{/params}}
             )</span>
@@ -15,6 +15,10 @@
             ()
         {{/if}}
         </strong>
+
+        <div class="description">
+            {{{methodDescription}}}
+        </div>
 
         {{#if params}}
             <ul class="params-list list">
