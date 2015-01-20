@@ -1,4 +1,4 @@
-[tinycircleslider](http://baijs.com/tinycircleslider) [![Build Status][travis-image]][travis-url] [![Coverage Status][coveralls-image]][coveralls-url]
+[tinycircleslider](http://baijs.com/tinycircleslider) [![Build Status][travis-image]][travis-url] [![Coverage Status][coveralls-image]][coveralls-url] [![NPM version][npm-image]][npm-url]
 ==================================================
 
 What you need to build your own version of tinycircleslider
@@ -54,4 +54,5 @@ If you have any questions, please feel free to email [me](mailto:wieringen@gmail
 [coveralls-image]: https://img.shields.io/coveralls/wieringen/tinycircleslider/master.svg
 [coveralls-url]: https://coveralls.io/r/wieringen/tinycircleslider?branch=master
 
-
+[npm-image]: https://badge.fury.io/js/tinycircleslider.png
+[npm-url]: http://badge.fury.io/js/tinycircleslider
