@@ -85,15 +85,4 @@ describe('A single Tinycircleslider', function() {
 
         expect(instance.slideCurrent).to.equal(0);
     });
-
-    it('should set the angle of every dot when dotSnap is enabled', function() {
-        var instance = $('#rotatescroll').tinycircleslider({ dotsSnap: true }).data('plugin_tinycircleslider')
-        ,   angle = 360 / instance.slidesTotal
-        ;
-
-        $.each(instance.dots, function(index, dot){
-            expect(dot.angle).to.equal(angle * index);
-        });
-    });
-
 });
