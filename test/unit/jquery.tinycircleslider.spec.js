@@ -8,7 +8,7 @@ describe('A single Tinycircleslider', function() {
     });
 
     afterEach(function () {
-        //document.body.innerHTML = '';
+        document.body.innerHTML = '';
     });
 
     it('should have a chainable constructor', function() {
