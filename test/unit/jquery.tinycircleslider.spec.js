@@ -79,10 +79,12 @@ describe('A single Tinycircleslider', function() {
     });
 
     it('should stay in place if move method is called without arguments', function() {
-        var instance = $('#rotatescroll').tinycircleslider().data('plugin_tinycircleslider');
+        var instance = $('#rotatescroll').tinycircleslider().data('plugin_tinycircleslider')
+        ,   currentSlide = instance.slideCurrent
+        ;
 
         instance.move();
 
-        expect(instance.slideCurrent).to.equal(0);
+        expect(instance.slideCurrent).to.equal(currentSlide);
     });
 });
