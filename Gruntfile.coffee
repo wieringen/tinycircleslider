@@ -40,6 +40,8 @@ module.exports = ( grunt ) ->
                 configFile: "test/conf/karma-dev.js"
             ci:
                 configFile: "test/conf/karma-ci.js"
+            debug:
+                configFile: "test/conf/karma-debug.js"
 
 
         #  Remove old build.

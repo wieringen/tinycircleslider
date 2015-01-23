@@ -8,7 +8,7 @@ describe('A single Tinycircleslider', function() {
     });
 
     afterEach(function () {
-        document.body.innerHTML = '';
+        //document.body.innerHTML = '';
     });
 
     it('should have a chainable constructor', function() {
@@ -55,4 +55,45 @@ describe('A single Tinycircleslider', function() {
 
         expect(instance.start().intervalActive).to.equal(true);
     });
+
+    it('should have a chainable move method', function() {
+        var instance = $('#rotatescroll').tinycircleslider().data('plugin_tinycircleslider');
+
+        expect(instance.move()._name).to.equal('tinycircleslider');
+    });
+
+    it('should move to first slide if given index is less then 1', function() {
+        var instance = $('#rotatescroll').tinycircleslider().data('plugin_tinycircleslider');
+
+        instance.move(-1);
+
+        expect(instance.slideCurrent).to.equal(0);
+    });
+
+    it('should move to the first slide if given index is more then slidesTotal', function() {
+        var instance = $('#rotatescroll').tinycircleslider().data('plugin_tinycircleslider');
+
+        instance.move(100);
+
+        expect(instance.slideCurrent).to.equal(0);
+    });
+
+    it('should stay in place if move method is called without arguments', function() {
+        var instance = $('#rotatescroll').tinycircleslider().data('plugin_tinycircleslider');
+
+        instance.move();
+
+        expect(instance.slideCurrent).to.equal(0);
+    });
+
+    it('should set the angle of every dot when dotSnap is enabled', function() {
+        var instance = $('#rotatescroll').tinycircleslider({ dotsSnap: true }).data('plugin_tinycircleslider')
+        ,   angle = 360 / instance.slidesTotal
+        ;
+
+        $.each(instance.dots, function(index, dot){
+            expect(dot.angle).to.equal(angle * index);
+        });
+    });
+
 });
